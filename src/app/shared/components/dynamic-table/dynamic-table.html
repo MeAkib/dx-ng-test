@@ -1,0 +1,37 @@
+<dx-data-grid [dataSource]="data()" [keyExpr]="config().key" id="task-grids">
+  @for (col of config().columns; track col.key) {
+  <!-- <dxi-data-grid-column
+    [dataField]="col.key"
+    [caption]="col.label"
+    [alignment]="mapAlign(col.align)"
+    [cellTemplate]="cellTemplateName(col.type)"
+  >
+  </dxi-data-grid-column> -->
+  <dxi-data-grid-column [dataField]="col.key"></dxi-data-grid-column>
+  }
+
+  <!-- Define templates OUTSIDE the loop -->
+  <ng-template dxTemplate="text" let-cell>
+    <!-- {{ cell.value }} -->
+      hello
+  </ng-template>
+
+  <ng-template dxTemplate="number" let-cell>
+    {{ cell.value }}
+  </ng-template>
+
+  <ng-template dxTemplate="date" let-cell>
+    {{ cell.value | date }}
+  </ng-template>
+
+</dx-data-grid>
+
+<dx-data-grid
+    id="task-grid"
+    [dataSource]="tasks"
+    keyExpr="id"
+>
+    <dxi-data-grid-column dataField="task"></dxi-data-grid-column>
+    <dxi-data-grid-column dataField="dueDate"></dxi-data-grid-column>
+    <dxi-data-grid-column dataField="done"></dxi-data-grid-column>
+</dx-data-grid>
