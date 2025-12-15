@@ -1,0 +1,14 @@
+.column-link {
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+}
+
+.masked-cell {
+  cursor: pointer;
+  user-select: none;
+}
+
+.masked-cell:hover {
+  text-decoration: underline;
+}

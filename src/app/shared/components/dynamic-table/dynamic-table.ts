@@ -1,10 +1,17 @@
 import { Component, input, output, signal } from '@angular/core';
-import { AlignType, ColumnType, MaskType, TableAction, TableColumn, TableConfig } from './table.types';
+import {
+  AlignType,
+  ColumnType,
+  MaskType,
+  TableAction,
+  TableColumn,
+  TableConfig,
+} from './table.types';
 import { DxDataGridComponent, DxiDataGridColumnComponent } from 'devextreme-angular/ui/data-grid';
 import { DxCheckBoxModule } from 'devextreme-angular';
 
-import { CurrencyPipe, DatePipe, NgTemplateOutlet } from '@angular/common';
-import { DxiColumnComponent } from "devextreme-angular/ui/nested";
+import { CurrencyPipe, DatePipe, JsonPipe, NgTemplateOutlet } from '@angular/common';
+import { formatDate } from '../../utils/date-formater.utils';
 
 @Component({
   selector: 'app-dynamic-table',
@@ -15,7 +22,8 @@ import { DxiColumnComponent } from "devextreme-angular/ui/nested";
     CurrencyPipe,
     NgTemplateOutlet,
     DxCheckBoxModule,
-],
+    JsonPipe,
+  ],
   templateUrl: './dynamic-table.html',
   styleUrl: './dynamic-table.scss',
 })
@@ -23,11 +31,10 @@ export class DynamicTableComponent<T = any> {
   data = input.required<T[]>();
   config = input.required<TableConfig>();
 
-  tasks = [
-        { id: 1, task: "Buy groceries", dueDate: new Date(), done: false },
-        { id: 2, task: "Write a blog post", dueDate: new Date(), done: true }
-    ];
-
+  private revealedCells = new Set<string>();
+  cellKey(row: any, field: string) {
+    return `${row.__dxKey ?? JSON.stringify(row)}:${field}`;
+  }
   // Outputs
   rowClick = output<unknown>();
 
@@ -35,20 +42,71 @@ export class DynamicTableComponent<T = any> {
     return align ?? 'left';
   }
 
+  toggleReveal(row: any, field: string) {
+    const key = this.cellKey(row, field);
+    this.revealedCells.has(key) ? this.revealedCells.delete(key) : this.revealedCells.add(key);
+  }
+
+  isRevealed(row: any, field: string) {
+    return this.revealedCells.has(this.cellKey(row, field));
+  }
+
   onAction(action: TableAction, rowData: any) {
     this.rowClick.emit({ action, rowData });
   }
 
-  mask(value: string, type: MaskType) {
-    if (type === 'phone') {
-      return value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
-    } else if (type === 'zip') {
-      return value.replace(/(\d{5})(\d{4})?/, '$1-$2');
+  getColumnType(dataField: string): ColumnType {
+    return this.config().columns.find((c) => c.key === dataField)?.type ?? 'text';
+  }
+
+  maskValue(value: any, col: TableColumn): string {
+    if (value == null) return '';
+
+    switch (col.mask?.type) {
+      case 'dob-year': {
+        const formatted = formatDate(value); // 🔑 reuse
+        // 20/03/2023 → 20/03/xxxx
+        return formatted.replace(/\d{4}$/, 'xxxx');
+      }
+
+      case 'prefix': {
+        const str = String(value);
+        const visible = col.mask.visibleChars ?? 4;
+        return '*'.repeat(Math.max(0, str.length - visible)) + str.slice(-visible);
+      }
+
+      default:
+        return String(value);
     }
-    return value;
+  }
+
+  formatValue(value: any, col: TableColumn): string {
+    if (value == null) return '';
+
+    switch (col.type) {
+      case 'date':
+        return formatDate(value);
+
+      case 'currency':
+        return new Intl.NumberFormat('en-GB', {
+          style: 'currency',
+          currency: 'BDT',
+        }).format(value);
+
+      case 'mask':
+        // 🔑 IMPORTANT: reveal original value
+        return String(value);
+
+      default:
+        return String(value);
+    }
   }
 
   cellTemplateName(type: ColumnType) {
     return type;
+  }
+
+  getColumnConfig(field: string): TableColumn {
+    return this.config().columns.find((c) => c.key === field)!;
   }
 }

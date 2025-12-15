@@ -1,37 +1,48 @@
-<dx-data-grid [dataSource]="data()" [keyExpr]="config().key" id="task-grids">
+<dx-data-grid [dataSource]="data()">
   @for (col of config().columns; track col.key) {
-  <!-- <dxi-data-grid-column
+  <dxi-data-grid-column
     [dataField]="col.key"
     [caption]="col.label"
     [alignment]="mapAlign(col.align)"
-    [cellTemplate]="cellTemplateName(col.type)"
+    cellTemplate="dynamic"
   >
-  </dxi-data-grid-column> -->
-  <dxi-data-grid-column [dataField]="col.key"></dxi-data-grid-column>
+  </dxi-data-grid-column>
   }
 
-  <!-- Define templates OUTSIDE the loop -->
-  <ng-template dxTemplate="text" let-cell>
-    <!-- {{ cell.value }} -->
-      hello
-  </ng-template>
+  <!-- ONE template -->
+  <div *dxTemplate="let cellInfo of 'dynamic'">
+    @switch (getColumnType(cellInfo.column.dataField)) { @case ('date') {
+    {{ cellInfo.value | date : 'mediumDate' }}
+    } @case ('link') {
+    <a [href]="cellInfo.value" target="_blank" class="column-link">
+      {{ cellInfo.value }}
+    </a>
+    } @case ('mask') { @let col = getColumnConfig(cellInfo.column.dataField);
 
-  <ng-template dxTemplate="number" let-cell>
-    {{ cell.value }}
-  </ng-template>
+    <span
+      class="masked-cell"
+      (click)="toggleReveal(cellInfo.data, cellInfo.column.dataField)"
+      title="click to show"
+    >
+      {{
+        isRevealed(cellInfo.data, cellInfo.column.dataField)
+          ? formatValue(cellInfo.value, col)
+          : maskValue(cellInfo.value, col)
+      }}
+    </span>
 
-  <ng-template dxTemplate="date" let-cell>
-    {{ cell.value | date }}
-  </ng-template>
-
+    } @case ('boolean') {
+    <dx-check-box [value]="cellInfo.value" [readOnly]="true"> </dx-check-box>
+    } @case ('currency') {
+    {{ cellInfo.value | currency }}
+    } @default {
+    {{ cellInfo.value }}
+    } }
+  </div>
 </dx-data-grid>
 
-<dx-data-grid
-    id="task-grid"
-    [dataSource]="tasks"
-    keyExpr="id"
->
-    <dxi-data-grid-column dataField="task"></dxi-data-grid-column>
-    <dxi-data-grid-column dataField="dueDate"></dxi-data-grid-column>
-    <dxi-data-grid-column dataField="done"></dxi-data-grid-column>
-</dx-data-grid>
+<!-- <dx-data-grid id="task-grid" [dataSource]="tasks" keyExpr="id">
+  <dxi-data-grid-column dataField="task"></dxi-data-grid-column>
+  <dxi-data-grid-column dataField="dueDate"></dxi-data-grid-column>
+  <dxi-data-grid-column dataField="done"></dxi-data-grid-column>
+</dx-data-grid> -->

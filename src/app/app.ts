@@ -2,18 +2,19 @@ import { Component, signal } from '@angular/core';
 import { DynamicTableComponent } from './shared/components/dynamic-table/dynamic-table';
 import {
   TableConfig,
-  TableColumn,
-  TableAction,
 } from './shared/components/dynamic-table/table.types';
 
-interface User {
+interface Client {
   id: number;
   name: string;
+  numberOfAccounts: number;
+  totalAUM: number;
+  dateOfBirth: string;
+  SSN: string;
+  homeAddress: string;
+  mobileNumber: string;
+  businessName: string;
   email: string;
-  role: string;
-  salary: number;
-  joinDate: string;
-  isActive: boolean;
 }
 
 @Component({
@@ -23,57 +24,60 @@ interface User {
   styleUrl: './app.css',
 })
 export class App {
-  tableConfig = signal<TableConfig>({
-    title: 'User Management',
+
+  clientTableConfig = signal<TableConfig>({
+    title: 'Client Management',
     key: 'id',
     columns: [
       { key: 'id', label: 'ID', align: 'center', type: 'number' },
       { key: 'name', label: 'Name', align: 'left', type: 'text' },
-      { key: 'email', label: 'Email', align: 'left', type: 'text' },
-      { key: 'role', label: 'Role', align: 'left', type: 'text' },
-      { key: 'salary', label: 'Salary', align: 'right', type: 'currency' },
-      { key: 'joinDate', label: 'Join Date', align: 'center', type: 'date' },
-      { key: 'isActive', label: 'Active', align: 'center', type: 'boolean' },
-      // { key: 'actions', label: 'Actions', align: 'center', type: 'actions' },
+      { key: 'numberOfAccounts', label: 'Accounts', align: 'center', type: 'number' },
+      { key: 'totalAUM', label: 'Total AUM', align: 'right', type: 'currency' },
+      { key: 'dateOfBirth', label: 'Date of Birth', align: 'center', type: 'mask', mask: { type: 'dob-year' } },
+      { key: 'SSN', label: 'SSN', align: 'center', type: 'mask', mask: { type: 'prefix', visibleChars: 4 } },
+      { key: 'homeAddress', label: 'Address', align: 'left', type: 'text' },
+      { key: 'mobileNumber', label: 'Mobile', align: 'center', type: 'text' },
+      { key: 'businessName', label: 'Business', align: 'left', type: 'text' },
+      { key: 'email', label: 'Email', align: 'left', type: 'link' },
     ],
   });
 
-  users = signal<User[]>([
+  clients = signal<Client[]>([
     {
       id: 1,
-      name: 'John Doe',
-      email: 'john@example.com',
-      role: 'Admin',
-      salary: 75000,
-      joinDate: '2023-01-15',
-      isActive: true,
+      name: 'Michael Scott',
+      numberOfAccounts: 3,
+      totalAUM: 1500000,
+      dateOfBirth: '1975-03-15',
+      SSN: '123-45-6789',
+      homeAddress: '1725 Slough Avenue, Scranton, PA',
+      mobileNumber: '555-1234',
+      businessName: "Dunder Mifflin",
+      email: 'michael @dundermifflin.com',
     },
     {
       id: 2,
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      role: 'User',
-      salary: 65000,
-      joinDate: '2023-03-20',
-      isActive: true,
+      name: 'Pam Beesly',
+      numberOfAccounts: 2,
+      totalAUM: 800000,
+      dateOfBirth: '1980-03-25',
+      SSN: '987-65-4321',
+      homeAddress: '1725 Slough Avenue, Scranton, PA',
+      mobileNumber: '555-5678',
+      businessName: 'Art by Pam',
+      email: 'pam@artbypam.com',
     },
     {
       id: 3,
-      name: 'Bob Johnson',
-      email: 'bob@example.com',
-      role: 'Manager',
-      salary: 85000,
-      joinDate: '2022-11-10',
-      isActive: false,
-    },
-    {
-      id: 4,
-      name: 'Alice Brown',
-      email: 'alice@example.com',
-      role: 'User',
-      salary: 60000,
-      joinDate: '2024-02-01',
-      isActive: true,
+      name: 'Jim Halpert',
+      numberOfAccounts: 4,
+      totalAUM: 1200000,
+      dateOfBirth: '1978-10-01',
+      SSN: '555-66-7777',
+      homeAddress: '1725 Slough Avenue, Scranton, PA',
+      mobileNumber: '555-8765',
+      businessName: 'Halpert Motors',
+      email: 'jim@halpertmotors.com',
     },
   ]);
 }
