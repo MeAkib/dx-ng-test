@@ -1,8 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { DynamicTableComponent } from './shared/components/dynamic-table/dynamic-table';
-import {
-  TableConfig,
-} from './shared/components/dynamic-table/table.types';
+import { TableConfig } from './shared/components/dynamic-table/table.types';
 
 interface Client {
   id: number;
@@ -24,7 +22,6 @@ interface Client {
   styleUrl: './app.css',
 })
 export class App {
-
   clientTableConfig = signal<TableConfig>({
     title: 'Client Management',
     key: 'id',
@@ -33,8 +30,20 @@ export class App {
       { key: 'name', label: 'Name', align: 'left', type: 'text' },
       { key: 'numberOfAccounts', label: 'Accounts', align: 'center', type: 'number' },
       { key: 'totalAUM', label: 'Total AUM', align: 'right', type: 'currency' },
-      { key: 'dateOfBirth', label: 'Date of Birth', align: 'center', type: 'mask', mask: { type: 'dob-year' } },
-      { key: 'SSN', label: 'SSN', align: 'center', type: 'mask', mask: { type: 'prefix', visibleChars: 4 } },
+      {
+        key: 'dateOfBirth',
+        label: 'Date of Birth',
+        align: 'center',
+        type: 'mask',
+        mask: { type: 'dob-year' },
+      },
+      {
+        key: 'SSN',
+        label: 'SSN',
+        align: 'center',
+        type: 'mask',
+        mask: { type: 'prefix', visibleChars: 4 },
+      },
       { key: 'homeAddress', label: 'Address', align: 'left', type: 'text' },
       { key: 'mobileNumber', label: 'Mobile', align: 'center', type: 'text' },
       { key: 'businessName', label: 'Business', align: 'left', type: 'text' },
@@ -52,7 +61,7 @@ export class App {
       SSN: '123-45-6789',
       homeAddress: '1725 Slough Avenue, Scranton, PA',
       mobileNumber: '555-1234',
-      businessName: "Dunder Mifflin",
+      businessName: 'Dunder Mifflin',
       email: 'michael @dundermifflin.com',
     },
     {

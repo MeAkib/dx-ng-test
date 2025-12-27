@@ -7,33 +7,24 @@ import {
   TableColumn,
   TableConfig,
 } from './table.types';
-import { DxDataGridComponent, DxiDataGridColumnComponent } from 'devextreme-angular/ui/data-grid';
-import { DxCheckBoxModule } from 'devextreme-angular';
 
-import { CurrencyPipe, DatePipe, JsonPipe, NgTemplateOutlet } from '@angular/common';
+import { CurrencyPipe, DatePipe, JsonPipe } from '@angular/common';
 import { formatDate } from '../../utils/date-formater.utils';
 
 @Component({
   selector: 'app-dynamic-table',
-  imports: [
-    DxDataGridComponent,
-    DxiDataGridColumnComponent,
-    DatePipe,
-    CurrencyPipe,
-    NgTemplateOutlet,
-    DxCheckBoxModule,
-    JsonPipe,
-  ],
+  imports: [DatePipe, CurrencyPipe, JsonPipe],
   templateUrl: './dynamic-table.html',
   styleUrl: './dynamic-table.scss',
 })
-export class DynamicTableComponent<T = any> {
+export class DynamicTableComponent<T extends Record<string, any> = Record<string, any>> {
   data = input.required<T[]>();
   config = input.required<TableConfig>();
 
   private revealedCells = new Set<string>();
+
   cellKey(row: any, field: string) {
-    return `${row.__dxKey ?? JSON.stringify(row)}:${field}`;
+    return `${row.id}:${field}`;
   }
   // Outputs
   rowClick = output<unknown>();
@@ -58,6 +49,13 @@ export class DynamicTableComponent<T = any> {
   getColumnType(dataField: string): ColumnType {
     return this.config().columns.find((c) => c.key === dataField)?.type ?? 'text';
   }
+
+  // onCellClick(row: any, col: TableColumn) {
+  //   if (col.type !== 'mask') return;
+
+  //   const key = this.cellKey(row, col.key);
+  //   this.revealedCells.has(key) ? this.revealedCells.delete(key) : this.revealedCells.add(key);
+  // }
 
   maskValue(value: any, col: TableColumn): string {
     if (value == null) return '';

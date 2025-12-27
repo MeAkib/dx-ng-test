@@ -1,48 +1,52 @@
-<dx-data-grid [dataSource]="data()">
-  @for (col of config().columns; track col.key) {
-  <dxi-data-grid-column
-    [dataField]="col.key"
-    [caption]="col.label"
-    [alignment]="mapAlign(col.align)"
-    cellTemplate="dynamic"
-  >
-  </dxi-data-grid-column>
-  }
-
-  <!-- ONE template -->
-  <div *dxTemplate="let cellInfo of 'dynamic'">
-    @switch (getColumnType(cellInfo.column.dataField)) { @case ('date') {
-    {{ cellInfo.value | date : 'mediumDate' }}
-    } @case ('link') {
-    <a [href]="cellInfo.value" target="_blank" class="column-link">
-      {{ cellInfo.value }}
-    </a>
-    } @case ('mask') { @let col = getColumnConfig(cellInfo.column.dataField);
-
-    <span
-      class="masked-cell"
-      (click)="toggleReveal(cellInfo.data, cellInfo.column.dataField)"
-      title="click to show"
-    >
-      {{
-        isRevealed(cellInfo.data, cellInfo.column.dataField)
-          ? formatValue(cellInfo.value, col)
-          : maskValue(cellInfo.value, col)
-      }}
-    </span>
-
-    } @case ('boolean') {
-    <dx-check-box [value]="cellInfo.value" [readOnly]="true"> </dx-check-box>
-    } @case ('currency') {
-    {{ cellInfo.value | currency }}
-    } @default {
-    {{ cellInfo.value }}
-    } }
+<div class="grid-table">
+  <!-- Header -->
+  <div class="grid-header">
+    @for (col of config().columns; track col.key) {
+    <div class="grid-cell header" [style.text-align]="mapAlign(col.align)">
+      {{ col.label }}
+    </div>
+    }
   </div>
-</dx-data-grid>
 
-<!-- <dx-data-grid id="task-grid" [dataSource]="tasks" keyExpr="id">
-  <dxi-data-grid-column dataField="task"></dxi-data-grid-column>
-  <dxi-data-grid-column dataField="dueDate"></dxi-data-grid-column>
-  <dxi-data-grid-column dataField="done"></dxi-data-grid-column>
-</dx-data-grid> -->
+  <!-- Rows -->
+  <div class="grid-body">
+    @for (row of data(); track row['id'] ?? $index) {
+
+    <div class="grid-row">
+      @for (col of config().columns; track col.key) {
+
+      <div class="grid-cell" [style.text-align]="mapAlign(col.align)">
+        @switch (col.type) {
+
+        <!-- @case ('date') {
+                {{ formatDate(row[col.key]) }}
+              }
+
+              @case ('currency') {
+                {{ formatCurrency(row[col.key]) }}
+              } -->
+
+        @case ('boolean') {
+        <input type="checkbox" [checked]="row[col.key]" disabled />
+        } @case ('link') {
+        <a [href]="row[col.key]" target="_blank">
+          {{ row[col.key] }}
+        </a>
+        } @case ('mask') {
+        <span class="masked-cell" (click)="toggleReveal(row, col.key)">
+          {{
+            isRevealed(row, col.key) ? formatValue(row[col.key], col) : maskValue(row[col.key], col)
+          }}
+        </span>
+        } @default {
+
+        <span [class.col-type]="col.type">{{ row[col.key] }}</span>
+        } }
+      </div>
+
+      }
+    </div>
+
+    }
+  </div>
+</div>

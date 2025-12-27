@@ -1,7 +1,52 @@
+.grid-table {
+  display: grid;
+  row-gap: 8px;
+  width: 100%;
+}
+
+.grid-header,
+.grid-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.grid-header {
+  font-weight: 600;
+  border-bottom: 1px solid #ddd;
+}
+
+.grid-cell {
+  padding: 8px 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.grid-cell.header {
+  background: #f7f7f7;
+}
+
+.grid-row {
+  border-bottom: 1px solid #eee;
+}
+
+.grid-row:hover {
+  background: #fafafa;
+}
+
+.grid-cell a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.grid-cell a:hover {
+  text-decoration: underline;
+}
+
 .column-link {
-    text-decoration: underline;
-    color: blue;
-    cursor: pointer;
+  text-decoration: underline;
+  color: blue;
+  cursor: pointer;
 }
 
 .masked-cell {
