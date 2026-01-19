@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, input, output } from "@angular/core";
 
 
 export interface ModalConfig {
@@ -34,19 +34,17 @@ export const DEFAULT_MODAL_CONFIG: Required<ModalConfig> = {
     data: null,
 };
 
-
-
 @Component({
     selector: 'modal',
     templateUrl: './modal.component.html',
     styleUrl: './style.css',
 })
 export class ModalComponent {
-    @Input() config!: ModalConfig;
+    config = input<ModalConfig>()
 
-    @Output() confirm = new EventEmitter<any>();
-    @Output() cancel = new EventEmitter<void>();
-    @Output() close = new EventEmitter<void>();
+    confirm = output<any>()
+    cancel = output<void>()
+    close = output<void>()
 
     get mergedConfig() {
         return { ...DEFAULT_MODAL_CONFIG, ...this.config };
