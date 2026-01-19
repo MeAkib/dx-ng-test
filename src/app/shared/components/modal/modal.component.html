@@ -1,0 +1,33 @@
+<div class="backdrop" (click)="onBackdropClick()"></div>
+
+<div
+  class="modal"
+  [style.width]="mergedConfig.width"
+  [style.maxWidth]="mergedConfig.maxWidth"
+>
+  <header class="modal-header">
+    <h3>{{ mergedConfig.title }}</h3>
+
+    @if (mergedConfig.closable) {
+      <button class="close" (click)="onClose()">×</button>
+    }
+  </header>
+
+  <section class="modal-body">
+    <p>{{ mergedConfig.content }}</p>
+  </section>
+
+  <footer class="modal-footer">
+    @if (mergedConfig.showCancel) {
+      <button (click)="onCancel()">
+        {{ mergedConfig.cancelText }}
+      </button>
+    }
+
+    @if (mergedConfig.showConfirm) {
+      <button class="primary" (click)="onConfirm()">
+        {{ mergedConfig.confirmText }}
+      </button>
+    }
+  </footer>
+</div>

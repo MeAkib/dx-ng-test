@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { DynamicTableComponent } from './shared/components/dynamic-table/dynamic-table';
 import { TableConfig } from './shared/components/dynamic-table/table.types';
+import { ModalComponent, ModalConfig } from './shared/components/modal/modal.component';
 
 interface Client {
   id: number;
@@ -17,11 +18,12 @@ interface Client {
 
 @Component({
   selector: 'app-root',
-  imports: [DynamicTableComponent],
+  imports: [DynamicTableComponent, ModalComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
+  
   clientTableConfig = signal<TableConfig>({
     title: 'Client Management',
     key: 'id',
@@ -89,4 +91,27 @@ export class App {
       email: 'jim@halpertmotors.com',
     },
   ]);
+
+  isOpen = signal(false)
+
+  modalConfig: ModalConfig = {
+    title: 'Delete item',
+    content: 'Are you sure you want to delete?',
+    confirmText: 'Delete',
+    cancelText: 'Cancel',
+    data: { id: 1 },
+  };
+
+  onCancel(): void {
+    this.isOpen.set(false)
+
+  }
+
+  onClose(): void {
+    this.isOpen.set(false)
+  }
+
+  onConfirm(data: any): void {
+    console.log(data)
+  }
 }
