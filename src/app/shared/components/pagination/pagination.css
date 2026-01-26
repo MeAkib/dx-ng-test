@@ -1,0 +1,20 @@
+button {
+    margin: 0 2px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+select {
+    margin: 0 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+
+.disabled {
+    background-color: #e0e0e0;
+    color: #a0a0a0;
+    cursor: not-allowed;
+}

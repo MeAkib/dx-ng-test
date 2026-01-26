@@ -1,12 +1,14 @@
 <!-- <app-dynamic-table [data]="clients()" [config]="clientTableConfig()" /> -->
 
-@if(isOpen()) {
+<!-- @if(isOpen()) {
     <modal
     [config]="modalConfig"
     (confirm)="onConfirm($event)"
     (cancel)="onCancel()"
     (close)="onClose()"
   />
-}
+} -->
 
-<button (click)="isOpen.set(true)">Open</button>
+<!-- <button (click)="isOpen.set(true)">Open</button> -->
+<app-dynamic-table [data]="clients()" [config]="clientTableConfig()" />
+<app-pagination />

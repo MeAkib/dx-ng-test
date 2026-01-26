@@ -1,0 +1,19 @@
+<div
+  class="flex"
+  style="display: flex; justify-content: space-between; align-items: center; gap: 30px; margin-top: 40px;"
+>
+  <p>Total items: {{ totalItems() }}</p>
+
+  <div class="d">
+    <button (click)="toFirstPage()" [class.disabled]="currentPage() === 1">1</button>
+    <button (click)="goToPreviousPage()" [class.disabled]="currentPage() === 1">Previous</button>
+    <select [(ngModel)]="currentPage" (ngModelChange)="onPageChange($event)">
+      @for (item of pageOptions(); track item) {
+        <option [value]="item">{{ item }}</option>
+      }
+    </select>
+    <button (click)="goToNextPage()" [class.disabled]="currentPage() === totalPages()">Next</button>
+    <button (click)="toToLastPage()" [class.disabled]="currentPage() === totalPages()"> {{totalPages()}}</button>
+  </div>
+  <p>Items per page: {{ itemsPerPage() }}</p>
+</div>

@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { DynamicTableComponent } from './shared/components/dynamic-table/dynamic-table';
 import { TableConfig } from './shared/components/dynamic-table/table.types';
 import { ModalComponent, ModalConfig } from './shared/components/modal/modal.component';
+import { Pagination } from "./shared/components/pagination/pagination";
 
 interface Client {
   id: number;
@@ -18,7 +19,7 @@ interface Client {
 
 @Component({
   selector: 'app-root',
-  imports: [DynamicTableComponent, ModalComponent],
+  imports: [DynamicTableComponent, Pagination, ModalComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
